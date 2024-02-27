@@ -1,4 +1,10 @@
 ```sh
+git clone https://github.com/debianmaster/aes-encryption-rust-example.git
+cd aes-encryption-rust-example.git
+cargo run 
+```
+
+```sh
 curl -X POST http://127.0.0.1:8080/encrypt \
 -H "Content-Type: application/json" \
 -d '{"data":"Hello, AES-256-CBC!"}'
