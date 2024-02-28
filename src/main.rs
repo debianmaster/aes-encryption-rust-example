@@ -11,6 +11,8 @@ type Aes256Cbc = Cbc<Aes256, Pkcs7>;
 #[derive(Serialize, Deserialize)]
 struct EncryptRequest {
     data: String,
+    key: String, // Add this line
+    iv: String,  // Add this line
 }
 
 #[derive(Serialize, Deserialize)]
@@ -33,11 +35,14 @@ struct DecryptResponse {
 }
 
 async fn encrypt(data: web::Json<EncryptRequest>) -> impl Responder {
-    let key = thread_rng().gen::<[u8; 32]>();
-    let iv = thread_rng().gen::<[u8; 16]>();
+    let EncryptRequest { data, key, iv } = data.into_inner();
+    let key = decode(&key).unwrap();
+    // let iv = decode(&iv).unwrap();
+    let iv: [u8; 16] = [1, 69, 197, 176, 134, 193, 42, 188, 218, 158, 188, 149, 198, 231, 59, 93];
+
     let cipher = Aes256Cbc::new_from_slices(&key, &iv).unwrap();
 
-    let encrypted_data = cipher.encrypt_vec(data.data.as_bytes());
+    let encrypted_data = cipher.encrypt_vec(data.as_bytes());
     HttpResponse::Ok().json(EncryptResponse {
         encrypted_data: encode(&encrypted_data),
         key: encode(&key),
@@ -48,7 +53,9 @@ async fn encrypt(data: web::Json<EncryptRequest>) -> impl Responder {
 async fn decrypt(data: web::Json<DecryptRequest>) -> impl Responder {
     let DecryptRequest { encrypted_data, key, iv } = data.into_inner();
     let key = decode(&key).unwrap();
-    let iv = decode(&iv).unwrap();
+    // let iv = decode(&iv).unwrap();
+    let iv: [u8; 16] = [1, 69, 197, 176, 134, 193, 42, 188, 218, 158, 188, 149, 198, 231, 59, 93];
+
     let cipher = Aes256Cbc::new_from_slices(&key, &iv).unwrap();
 
     let decrypted_data = cipher.decrypt_vec(&decode(&encrypted_data).unwrap()).unwrap();

@@ -7,7 +7,7 @@ cargo run
 ```sh
 curl -X POST http://127.0.0.1:8080/encrypt \
 -H "Content-Type: application/json" \
--d '{"data":"Hello, AES-256-CBC!"}'
+-d '{"data":"Hello, AES-256-CBC!","key":"4050ba0bc19dc38e2587a0837db956164f754c2364519aff1f07198612d3bf3a","iv":"5fb160e67acd8772939ba5aee58fba2a"}'
 
 {"encrypted_data":"118e7ab1869c9d3d94199202ffc78c2760813a2c9f7b1f0024c5073c9a6a9ac3","key":"4050ba0bc19dc38e2587a0837db956164f754c2364519aff1f07198612d3bf3a","iv":"5fb160e67acd8772939ba5aee58fba2a"}
 ```
